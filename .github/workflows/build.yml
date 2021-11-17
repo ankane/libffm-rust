@@ -8,7 +8,7 @@ jobs:
       matrix:
         target-feature: [+sse3, -sse3]
     env:
-      RUSTFLAGS: -C target-feature={{ matrix.target-feature }}
+      RUSTFLAGS: -C target-feature=${{ matrix.target-feature }}
     steps:
     - uses: actions/checkout@v2
     - uses: actions-rs/toolchain@v1
