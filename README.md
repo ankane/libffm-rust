@@ -75,7 +75,7 @@ let model = libffm::Model::params()
     .normalization(true)     // use instance-wise normalization
     .auto_stop(false)        // stop at the iteration that achieves the best validation loss
     .on_disk(false)          // on-disk training
-    .train("train.ffm");     // train, train_eval, train_on_disk, or train_eval_on_disk
+    .train("train.ffm");     // train or train_eval
 ```
 
 ## Command Line Tool
