@@ -1,0 +1,19 @@
+name: build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target-feature: [+sse3, -sse3]
+    env:
+      RUSTFLAGS: -C target-feature={{ matrix.target-feature }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - run: cargo test
+    - run: cargo run --bin ffm-train --features cli -- data/train.ffm
+    - run: cargo run --bin ffm-predict --features cli -- data/test.ffm train.ffm.model output.txt

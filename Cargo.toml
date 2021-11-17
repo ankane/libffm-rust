@@ -1,0 +1,29 @@
+[package]
+name = "libffm"
+version = "0.1.0"
+description = "Field-aware factorization machines in Rust"
+repository = "https://github.com/ankane/libffm-rust"
+license = "BSD-3-Clause"
+authors = ["Andrew Kane <andrew@ankane.org>"]
+edition = "2018"
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+byteorder = "1"
+rand = "0.8"
+structopt = { version = "0.3", optional = true }
+
+[features]
+cli = ["structopt"]
+
+[[bin]]
+name = "ffm-train"
+required-features = ["cli"]
+test = false
+
+[[bin]]
+name = "ffm-predict"
+required-features = ["cli"]
+test = false
