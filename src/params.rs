@@ -133,7 +133,7 @@ impl Params {
             let va_loss = model.one_epoch(&mut va, false, self)?;
             if self.auto_stop {
                 if va_loss > best_va_loss {
-                    model.w = prev_w.clone();
+                    model.w = prev_w;
                     self.logln(format!("Auto-stop. Use model at {}th iteration.", iter - 1));
                     break;
                 } else {
