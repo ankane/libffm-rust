@@ -1,3 +1,7 @@
+//! Field-aware factorization machines in Rust
+//!
+//! [View the docs](https://github.com/ankane/libffm-rust)
+
 mod disk;
 mod error;
 mod model;
