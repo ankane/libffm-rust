@@ -12,11 +12,11 @@ readme = "README.md"
 
 [dependencies]
 byteorder = "1"
+clap = { version = "3", features = ["derive"], optional = true }
 rand = "0.8"
-structopt = { version = "0.3", optional = true }
 
 [features]
-cli = ["structopt"]
+cli = ["clap"]
 
 [[bin]]
 name = "ffm-train"

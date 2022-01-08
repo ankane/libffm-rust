@@ -1,21 +1,22 @@
+use clap::{AppSettings, ColorChoice, Parser};
 use libffm::Model;
 use std::error::Error;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::path::PathBuf;
 use std::process;
-use structopt::StructOpt;
 
-#[derive(StructOpt, Debug)]
-#[structopt(name = "ffm-predict")]
+#[derive(Debug, Parser)]
+#[clap(name = "ffm-predict", version, color = ColorChoice::Never)]
+#[clap(global_setting(AppSettings::DeriveDisplayOrder))]
 struct Opt {
-    #[structopt(parse(from_os_str))]
+    #[clap(parse(from_os_str))]
     test_file: PathBuf,
 
-    #[structopt(parse(from_os_str))]
+    #[clap(parse(from_os_str))]
     model_file: PathBuf,
 
-    #[structopt(parse(from_os_str))]
+    #[clap(parse(from_os_str))]
     output_file: PathBuf,
 }
 
@@ -36,7 +37,7 @@ fn predict(test_path: &PathBuf, model_path: &PathBuf, output_path: &PathBuf) -> 
 }
 
 fn main() {
-    let opt = Opt::from_args();
+    let opt = Opt::parse();
 
     if let Err(err) = predict(&opt.test_file, &opt.model_file, &opt.output_file) {
         println!("{}", err);
