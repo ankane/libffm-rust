@@ -45,8 +45,8 @@ impl<W: Read + Write + Seek> ProblemOnDisk<W> {
             r: Vec::new(),
             p: Vec::new(),
             x: Vec::new(),
-            b: b,
-            f: f,
+            b,
+            f,
         })
     }
 

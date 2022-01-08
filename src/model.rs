@@ -59,9 +59,9 @@ impl Model {
         let k_aligned = get_k_aligned(param.k);
 
         let mut model = Self {
-            n: n,
+            n,
             k: param.k as i32,
-            m: m,
+            m,
             w: malloc_aligned_float(n as usize * m as usize * k_aligned * 2),
             normalization: param.normalization,
         };
@@ -96,11 +96,13 @@ impl Model {
     pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
         let mut f_in = File::open(path)?;
 
-        let mut model = Self::default();
-        model.n = f_in.read_i32::<NativeEndian>()?;
-        model.m = f_in.read_i32::<NativeEndian>()?;
-        model.k = f_in.read_i32::<NativeEndian>()?;
-        model.normalization = f_in.read_u8()? != 0;
+        let mut model = Self {
+            n: f_in.read_i32::<NativeEndian>()?,
+            m: f_in.read_i32::<NativeEndian>()?,
+            k: f_in.read_i32::<NativeEndian>()?,
+            normalization: f_in.read_u8()? != 0,
+            ..Self::default()
+        };
 
         let w_size = model.get_w_size();
         model.w = vec![0.0; w_size];
