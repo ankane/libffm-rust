@@ -1,78 +1,77 @@
-use clap::{AppSettings, ColorChoice, Parser};
+use clap::{ColorChoice, Parser};
 use libffm::{Error, Model};
 use std::path::PathBuf;
 use std::process;
 
 #[derive(Debug, Parser)]
-#[clap(name = "ffm-train", version, color = ColorChoice::Never)]
-#[clap(global_setting(AppSettings::DeriveDisplayOrder))]
-struct Opt {
+#[command(name = "ffm-train", version, color = ColorChoice::Never)]
+struct Args {
     /// Set regularization parameter
-    #[clap(short, default_value = "0.00002")]
+    #[arg(short, default_value_t = 0.00002)]
     lambda: f32,
 
     /// Set number of latent factors
-    #[clap(short = 'k', default_value = "4")]
+    #[arg(short = 'k', default_value_t = 4)]
     factor: i32,
 
     /// Set number of iterations
-    #[clap(short = 't', default_value = "15")]
+    #[arg(short = 't', default_value_t = 15)]
     iteration: i32,
 
     /// Set learning rate
-    #[clap(short = 'r', default_value = "0.2")]
+    #[arg(short = 'r', default_value_t = 0.2)]
     eta: f32,
 
     /// Set number of threads
-    #[clap(short = 's', default_value = "1")]
+    #[arg(short = 's', default_value_t = 1)]
     nr_threads: i32,
 
     /// Set path to the validation set
-    #[clap(short = 'p', parse(from_os_str))]
+    #[arg(short = 'p')]
     va_path: Option<PathBuf>,
 
     /// Quiet mode (no output)
-    #[clap(long)]
+    #[arg(long)]
     quiet: bool,
 
     /// Disable instance-wise normalization
-    #[clap(long)]
+    #[arg(long)]
     no_norm: bool,
 
     /// Stop at the iteration that achieves the best validation loss (must be used with -p)
-    #[clap(long)]
+    #[arg(long)]
     auto_stop: bool,
 
     /// Enable in-memory training
-    #[clap(long)]
+    #[arg(long)]
     in_memory: bool,
 
-    #[clap(name = "train-file", parse(from_os_str))]
+    #[arg(name = "train-file")]
     tr_path: PathBuf,
 
-    #[clap(name = "model-file", parse(from_os_str))]
+    #[arg(name = "model-file")]
     model_path: Option<PathBuf>,
 }
 
-fn train_on_disk(opt: &Opt) -> Result<(), Error> {
+fn train_on_disk(args: &Args) -> Result<(), Error> {
     let mut params = Model::params();
     params
-        .learning_rate(opt.eta)
-        .lambda(opt.lambda)
-        .iterations(opt.iteration)
-        .factors(opt.factor)
-        .normalization(!opt.no_norm)
-        .auto_stop(opt.auto_stop)
-        .quiet(opt.quiet)
-        .on_disk(!opt.in_memory);
+        .learning_rate(args.eta)
+        .lambda(args.lambda)
+        .iterations(args.iteration)
+        .factors(args.factor)
+        .normalization(!args.no_norm)
+        .auto_stop(args.auto_stop)
+        .quiet(args.quiet)
+        .on_disk(!args.in_memory);
 
-    let model = match &opt.va_path {
-        Some(p) => params.train_eval(&opt.tr_path, &p)?,
-        None => params.train(&opt.tr_path)?,
+    let model = match &args.va_path {
+        Some(p) => params.train_eval(&args.tr_path, &p)?,
+        None => params.train(&args.tr_path)?,
     };
 
-    let model_path = opt.model_path.clone().unwrap_or_else(|| {
-        let mut filename = opt.tr_path.file_name().unwrap().to_os_string();
+    let model_path = args.model_path.clone().unwrap_or_else(|| {
+        let mut filename = args.tr_path.file_name().unwrap().to_os_string();
         filename.push(".model");
         PathBuf::from(filename)
     });
@@ -80,14 +79,14 @@ fn train_on_disk(opt: &Opt) -> Result<(), Error> {
 }
 
 fn main() {
-    let opt = Opt::parse();
+    let args = Args::parse();
 
-    if opt.auto_stop && opt.va_path.is_none() {
+    if args.auto_stop && args.va_path.is_none() {
         println!("To use auto-stop, you need to assign a validation set");
         process::exit(1);
     }
 
-    if let Err(err) = train_on_disk(&opt) {
+    if let Err(err) = train_on_disk(&args) {
         println!("{}", err);
         process::exit(1);
     }

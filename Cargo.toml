@@ -12,7 +12,7 @@ readme = "README.md"
 
 [dependencies]
 byteorder = "1"
-clap = { version = "3", features = ["derive"], optional = true }
+clap = { version = "4", features = ["derive"], optional = true }
 rand = "0.8"
 
 [features]
