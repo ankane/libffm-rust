@@ -27,7 +27,7 @@ struct Args {
     nr_threads: i32,
 
     /// Set path to the validation set
-    #[arg(short = 'p')]
+    #[arg(short = 'p', value_parser)]
     va_path: Option<PathBuf>,
 
     /// Quiet mode (no output)
@@ -46,10 +46,10 @@ struct Args {
     #[arg(long)]
     in_memory: bool,
 
-    #[arg(name = "train-file")]
+    #[arg(name = "train-file", value_parser)]
     tr_path: PathBuf,
 
-    #[arg(name = "model-file")]
+    #[arg(name = "model-file", value_parser)]
     model_path: Option<PathBuf>,
 }
 

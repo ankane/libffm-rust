@@ -9,13 +9,13 @@ use std::process;
 #[derive(Debug, Parser)]
 #[command(name = "ffm-predict", version, color = ColorChoice::Never)]
 struct Args {
-    #[arg()]
+    #[arg(value_parser)]
     test_file: PathBuf,
 
-    #[arg()]
+    #[arg(value_parser)]
     model_file: PathBuf,
 
-    #[arg()]
+    #[arg(value_parser)]
     output_file: PathBuf,
 }
 
