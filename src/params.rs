@@ -154,3 +154,9 @@ impl Params {
         }
     }
 }
+
+impl Default for Params {
+    fn default() -> Self {
+        Self::new()
+    }
+}

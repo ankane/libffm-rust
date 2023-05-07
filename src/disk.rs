@@ -183,13 +183,13 @@ fn hashfile(f: &mut File, one_block: bool) -> Result<u64, Error> {
         if size >= 8 {
             while i < size - 8 {
                 let x = buffer.read_u64::<NativeEndian>()?;
-                magic = ((magic + Wrapping(x)) * (magic + Wrapping(x + 1)) >> 1) + Wrapping(x);
+                magic = (((magic + Wrapping(x)) * (magic + Wrapping(x + 1))) >> 1) + Wrapping(x);
                 i += 8;
             }
         }
         while i < size {
             let x = buffer.read_u8()? as u64;
-            magic = ((magic + Wrapping(x)) * (magic + Wrapping(x + 1)) >> 1) + Wrapping(x);
+            magic = (((magic + Wrapping(x)) * (magic + Wrapping(x + 1))) >> 1) + Wrapping(x);
             i += 1;
         }
 
@@ -202,6 +202,7 @@ fn hashfile(f: &mut File, one_block: bool) -> Result<u64, Error> {
     Ok(magic.0)
 }
 
+#[allow(clippy::too_many_arguments)]
 fn write_chunk<W: Write + Seek>(f_bin: &mut W, y: &mut Vec<f32>, r: &mut Vec<f32>, p: &mut Vec<i64>, x: &mut Vec<Node>, b: &mut Vec<i64>, meta: &mut DiskProblemMeta, p2: &mut i64) -> Result<(), Error> {
     b.push(f_bin.seek(SeekFrom::Current(0))? as i64);
     let l = y.len();

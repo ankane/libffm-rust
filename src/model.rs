@@ -60,7 +60,7 @@ impl Model {
 
         let mut model = Self {
             n,
-            k: param.k as i32,
+            k: param.k,
             m,
             w: malloc_aligned_float(n as usize * m as usize * k_aligned * 2),
             normalization: param.normalization,
