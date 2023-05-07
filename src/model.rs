@@ -189,9 +189,8 @@ impl Model {
             let mut inner_order: Vec<usize> = (0..l).collect();
             inner_order.shuffle(&mut rng);
 
-            for ii in 0..l {
-                let i = inner_order[ii];
-
+            for ii in inner_order.iter().take(l) {
+                let i = *ii;
                 let y = prob.y[i];
 
                 let nodes = &prob.x[prob.p[i] as usize..prob.p[i + 1] as usize];
@@ -370,8 +369,7 @@ impl Model {
                 continue;
             }
 
-            for i2 in i1 + 1..nodes.len() {
-                let n2 = &nodes[i2];
+            for n2 in nodes.iter().skip(i1 + 1) {
                 let j2 = n2.j;
                 let f2 = n2.f;
                 let v2 = n2.v;
@@ -411,8 +409,7 @@ impl Model {
                 continue;
             }
 
-            for i2 in i1 + 1..nodes.len() {
-                let n2 = &nodes[i2];
+            for n2 in nodes.iter().skip(i1 + 1) {
                 let j2 = n2.j as usize;
                 let f2 = n2.f as usize;
                 let v2 = n2.v;
