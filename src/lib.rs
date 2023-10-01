@@ -1,6 +1,4 @@
-//! Field-aware factorization machines in Rust
-//!
-//! [View the docs](https://github.com/ankane/libffm-rust)
+#![doc = include_str!("../README.md")]
 
 mod disk;
 mod error;
