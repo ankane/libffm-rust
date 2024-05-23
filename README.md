@@ -2,7 +2,7 @@
 
 [LIBFFM](https://github.com/ycjuan/libffm) - field-aware factorization machines - in Rust
 
-[![Build Status](https://github.com/ankane/libffm-rust/workflows/build/badge.svg?branch=master)](https://github.com/ankane/libffm-rust/actions)
+[![Build Status](https://github.com/ankane/libffm-rust/actions/workflows/build.yml/badge.svg)](https://github.com/ankane/libffm-rust/actions)
 
 ## Getting Started
 
