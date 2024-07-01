@@ -1,4 +1,4 @@
-## 0.3.0 (unreleased)
+## 0.2.0 (unreleased)
 
 - Updated Rust edition to 2021
 
