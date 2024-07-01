@@ -2,6 +2,7 @@ use std::error;
 use std::fmt;
 use std::io;
 
+/// An error.
 #[derive(Debug)]
 pub enum Error {
     Io(io::Error),

@@ -57,7 +57,7 @@ Save the model to a file
 model.save("model.bin").unwrap();
 ```
 
-Load the model from a file
+Load a model from a file
 
 ```rust
 let model = libffm::Model::load("model.bin").unwrap();

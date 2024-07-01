@@ -5,6 +5,7 @@ use crate::timer::Timer;
 use std::io::{Read, Seek, Write};
 use std::path::Path;
 
+/// A set of parameters.
 #[derive(Debug)]
 pub struct Params {
     pub(crate) eta: f32,
@@ -18,6 +19,7 @@ pub struct Params {
 }
 
 impl Params {
+    /// Returns a new set of parameters.
     pub fn new() -> Self {
         Self {
             eta: 0.2,
@@ -31,46 +33,55 @@ impl Params {
         }
     }
 
+    /// Sets the learning rate.
     pub fn learning_rate(&mut self, value: f32) -> &mut Self {
         self.eta = value;
         self
     }
 
+    /// Sets the regularization parameter.
     pub fn lambda(&mut self, value: f32) -> &mut Self {
         self.lambda = value;
         self
     }
 
+    /// Sets the number of iterations.
     pub fn iterations(&mut self, value: i32) -> &mut Self {
         self.nr_iters = value;
         self
     }
 
+    /// Sets the number of latent factors.
     pub fn factors(&mut self, value: i32) -> &mut Self {
         self.k = value;
         self
     }
 
+    /// Sets whether to use instance-wise normalization.
     pub fn normalization(&mut self, value: bool) -> &mut Self {
         self.normalization = value;
         self
     }
 
+    /// Sets whether to stop at the iteration that achieves the best validation loss.
     pub fn auto_stop(&mut self, value: bool) -> &mut Self {
         self.auto_stop = value;
         self
     }
 
+    /// Sets whether to use quiet mode (no output).
     pub fn quiet(&mut self, value: bool) -> &mut Self {
         self.quiet = value;
         self
     }
 
+    /// Sets whether to use on-disk training.
     pub fn on_disk(&mut self, value: bool) -> &mut Self {
         self.on_disk = value;
         self
     }
 
+    /// Trains a model.
     pub fn train<P: AsRef<Path>>(&self, tr_path: P) -> Result<Model, Error> {
         let mut tr_loader = ProblemLoader::new(tr_path, self.quiet)?;
 
@@ -83,6 +94,7 @@ impl Params {
         }
     }
 
+    /// Trains a model and performs cross-validation.
     pub fn train_eval<P: AsRef<Path>, Q: AsRef<Path>>(&self, tr_path: P, va_path: Q) -> Result<Model, Error> {
         // open both files first to fail fast
         let mut tr_loader = ProblemLoader::new(tr_path, self.quiet)?;

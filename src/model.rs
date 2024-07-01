@@ -41,6 +41,7 @@ fn malloc_aligned_float(size: usize) -> Vec<f32> {
     vec![0.0; size]
 }
 
+/// A model.
 #[derive(Debug, Default)]
 pub struct Model {
     pub(crate) n: i32,
@@ -51,6 +52,7 @@ pub struct Model {
 }
 
 impl Model {
+    /// Returns a new set of parameters.
     pub fn params() -> Params {
         Params::new()
     }
@@ -93,6 +95,7 @@ impl Model {
         model
     }
 
+    /// Loads a model from a file.
     pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
         let mut f_in = File::open(path)?;
 
@@ -111,6 +114,7 @@ impl Model {
         Ok(model)
     }
 
+    /// Saves the model to a file.
     pub fn save<P: AsRef<Path>>(&self, path: P) -> Result<(), Error> {
         let mut f_out = File::create(path)?;
         f_out.write_all(&self.n.to_ne_bytes())?;
@@ -121,14 +125,17 @@ impl Model {
         Ok(())
     }
 
+    /// Trains a model.
     pub fn train<P: AsRef<Path>>(tr_path: P) -> Result<Self, Error> {
         Params::new().train(tr_path)
     }
 
+    /// Trains a model and performs cross-validation.
     pub fn train_eval<P: AsRef<Path>, Q: AsRef<Path>>(tr_path: P, va_path: Q) -> Result<Self, Error> {
         Params::new().train_eval(tr_path, va_path)
     }
 
+    /// Returns predictions.
     pub fn predict<P: AsRef<Path>>(&self, path: P) -> Result<(Vec<f32>, f64), Error> {
         let mut predictions = Vec::new();
         let mut loss: f64 = 0.0;
