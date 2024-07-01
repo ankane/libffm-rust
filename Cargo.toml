@@ -6,6 +6,7 @@ repository = "https://github.com/ankane/libffm-rust"
 license = "BSD-3-Clause"
 authors = ["Andrew Kane <andrew@ankane.org>"]
 edition = "2021"
+rust-version = "1.63.0"
 readme = "README.md"
 
 [lib]
