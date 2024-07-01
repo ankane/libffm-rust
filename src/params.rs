@@ -149,7 +149,7 @@ impl Params {
                     self.logln(format!("Auto-stop. Use model at {}th iteration.", iter - 1));
                     break;
                 } else {
-                    prev_w = model.w.clone();
+                    prev_w.clone_from(&model.w);
                     best_va_loss = va_loss;
                 }
             }

@@ -135,7 +135,7 @@ impl ProblemLoader {
     pub fn read_to_disk(&mut self) -> Result<ProblemOnDisk<File>, Error> {
         let mut bin_path = self.path.file_name().unwrap().to_os_string();
         bin_path.push(".bin");
-        let mut f_bin = OpenOptions::new().read(true).write(true).create(true).open(&bin_path)?;
+        let mut f_bin = OpenOptions::new().read(true).write(true).create(true).truncate(true).open(&bin_path)?;
 
         let mut timer = Timer::new();
 
@@ -204,7 +204,7 @@ fn hashfile(f: &mut File, one_block: bool) -> Result<u64, Error> {
 
 #[allow(clippy::too_many_arguments)]
 fn write_chunk<W: Write + Seek>(f_bin: &mut W, y: &mut Vec<f32>, r: &mut Vec<f32>, p: &mut Vec<i64>, x: &mut Vec<Node>, b: &mut Vec<i64>, meta: &mut DiskProblemMeta, p2: &mut i64) -> Result<(), Error> {
-    b.push(f_bin.seek(SeekFrom::Current(0))? as i64);
+    b.push(f_bin.stream_position()? as i64);
     let l = y.len();
     meta.l += l as i32;
 
@@ -288,7 +288,7 @@ fn txt2bin<W: Write + Seek>(f_txt: &mut File, f_bin: &mut W) -> Result<(), Error
 
     assert_eq!(meta.num_blocks as usize, b.len());
 
-    meta.b_pos = f_bin.seek(SeekFrom::Current(0))? as i64;
+    meta.b_pos = f_bin.stream_position()? as i64;
     f_bin.write_all(&b.iter().flat_map(|v| v.to_ne_bytes()).collect::<Vec<u8>>())?;
 
     f_bin.seek(SeekFrom::Start(0))?;
