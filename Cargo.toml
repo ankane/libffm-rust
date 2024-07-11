@@ -1,6 +1,6 @@
 [package]
 name = "libffm"
-version = "0.1.0"
+version = "0.2.0"
 description = "Field-aware factorization machines in Rust"
 repository = "https://github.com/ankane/libffm-rust"
 license = "BSD-3-Clause"

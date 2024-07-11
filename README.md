@@ -18,7 +18,7 @@ LIBFFM Rust is available as a Rust library and a command line tool.
 Add this line to your application’s `Cargo.toml` under `[dependencies]`:
 
 ```toml
-libffm = "0.1"
+libffm = "0.2"
 ```
 
 ### How to Use
