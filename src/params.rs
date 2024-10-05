@@ -95,7 +95,11 @@ impl Params {
     }
 
     /// Trains a model and performs cross-validation.
-    pub fn train_eval<P: AsRef<Path>, Q: AsRef<Path>>(&self, tr_path: P, va_path: Q) -> Result<Model, Error> {
+    pub fn train_eval<P: AsRef<Path>, Q: AsRef<Path>>(
+        &self,
+        tr_path: P,
+        va_path: Q,
+    ) -> Result<Model, Error> {
         // open both files first to fail fast
         let mut tr_loader = ProblemLoader::new(tr_path, self.quiet)?;
         let mut va_loader = ProblemLoader::new(va_path, self.quiet)?;
@@ -114,7 +118,10 @@ impl Params {
     fn train_core<W: Read + Write + Seek>(&self, mut tr: ProblemOnDisk<W>) -> Result<Model, Error> {
         let mut model = Model::new(tr.meta.n, tr.meta.m, self);
 
-        self.logln(format!("{:>4}{:>13}{:>13}", "iter", "tr_logloss", "tr_time"));
+        self.logln(format!(
+            "{:>4}{:>13}{:>13}",
+            "iter", "tr_logloss", "tr_time"
+        ));
 
         let mut timer = Timer::new();
 
@@ -128,12 +135,19 @@ impl Params {
         Ok(model)
     }
 
-    fn train_eval_core<W: Read + Write + Seek>(&self, mut tr: ProblemOnDisk<W>, mut va: ProblemOnDisk<W>) -> Result<Model, Error> {
+    fn train_eval_core<W: Read + Write + Seek>(
+        &self,
+        mut tr: ProblemOnDisk<W>,
+        mut va: ProblemOnDisk<W>,
+    ) -> Result<Model, Error> {
         let mut model = Model::new(tr.meta.n, tr.meta.m, self);
         let mut prev_w = Vec::new();
         let mut best_va_loss = f32::MAX;
 
-        self.logln(format!("{:>4}{:>13}{:>13}{:>13}", "iter", "tr_logloss", "va_logloss", "tr_time"));
+        self.logln(format!(
+            "{:>4}{:>13}{:>13}{:>13}",
+            "iter", "tr_logloss", "va_logloss", "tr_time"
+        ));
 
         let mut timer = Timer::new();
 
@@ -154,7 +168,13 @@ impl Params {
                 }
             }
 
-            self.logln(format!("{:>4}{:>13.5}{:>13.5}{:>13.1}", iter, tr_loss, va_loss, timer.get()));
+            self.logln(format!(
+                "{:>4}{:>13.5}{:>13.5}{:>13.1}",
+                iter,
+                tr_loss,
+                va_loss,
+                timer.get()
+            ));
         }
 
         Ok(model)

@@ -81,7 +81,11 @@ impl Model {
                 while d < k_aligned {
                     let mut s = 0;
                     while s < ALIGN {
-                        w[w_offset] = if d < model.k as usize { coef * rng.gen_range(0.0..1.0) } else { 0.0 };
+                        w[w_offset] = if d < model.k as usize {
+                            coef * rng.gen_range(0.0..1.0)
+                        } else {
+                            0.0
+                        };
                         w[w_offset + ALIGN] = 1.0;
                         s += 1;
                         w_offset += 1;
@@ -121,7 +125,13 @@ impl Model {
         f_out.write_all(&self.m.to_ne_bytes())?;
         f_out.write_all(&self.k.to_ne_bytes())?;
         f_out.write_all(&(self.normalization as u8).to_ne_bytes())?;
-        f_out.write_all(&self.w.iter().flat_map(|v| v.to_ne_bytes()).collect::<Vec<u8>>())?;
+        f_out.write_all(
+            &self
+                .w
+                .iter()
+                .flat_map(|v| v.to_ne_bytes())
+                .collect::<Vec<u8>>(),
+        )?;
         Ok(())
     }
 
@@ -131,7 +141,10 @@ impl Model {
     }
 
     /// Trains a model and performs cross-validation.
-    pub fn train_eval<P: AsRef<Path>, Q: AsRef<Path>>(tr_path: P, va_path: Q) -> Result<Self, Error> {
+    pub fn train_eval<P: AsRef<Path>, Q: AsRef<Path>>(
+        tr_path: P,
+        va_path: Q,
+    ) -> Result<Self, Error> {
         Params::new().train_eval(tr_path, va_path)
     }
 
@@ -158,7 +171,11 @@ impl Model {
 
             let y_bar = self.predict_nodes(&x);
 
-            loss -= if y == 1.0 { y_bar.ln() } else { (1.0 - y_bar).ln() } as f64;
+            loss -= if y == 1.0 {
+                y_bar.ln()
+            } else {
+                (1.0 - y_bar).ln()
+            } as f64;
 
             predictions.push(y_bar);
         }
@@ -182,7 +199,12 @@ impl Model {
         1.0 / (1.0 + (-t).exp())
     }
 
-    pub(crate) fn one_epoch<W: Read + Write + Seek>(&mut self, prob: &mut ProblemOnDisk<W>, do_update: bool, param: &Params) -> Result<f32, Error> {
+    pub(crate) fn one_epoch<W: Read + Write + Seek>(
+        &mut self,
+        prob: &mut ProblemOnDisk<W>,
+        do_update: bool,
+        param: &Params,
+    ) -> Result<f32, Error> {
         let mut rng = thread_rng();
 
         let mut loss = 0.0;
@@ -327,11 +349,11 @@ impl Model {
 
                         let xmm_g1 = _mm_add_ps(
                             _mm_mul_ps(xmm_lambda, xmm_w1),
-                            _mm_mul_ps(xmm_kappav, xmm_w2)
+                            _mm_mul_ps(xmm_kappav, xmm_w2),
                         );
                         let xmm_g2 = _mm_add_ps(
                             _mm_mul_ps(xmm_lambda, xmm_w2),
-                            _mm_mul_ps(xmm_kappav, xmm_w1)
+                            _mm_mul_ps(xmm_kappav, xmm_w1),
                         );
 
                         xmm_wg1 = _mm_add_ps(xmm_wg1, _mm_mul_ps(xmm_g1, xmm_g1));
@@ -339,11 +361,11 @@ impl Model {
 
                         xmm_w1 = _mm_sub_ps(
                             xmm_w1,
-                            _mm_mul_ps(xmm_eta, _mm_mul_ps(_mm_rsqrt_ps(xmm_wg1), xmm_g1))
+                            _mm_mul_ps(xmm_eta, _mm_mul_ps(_mm_rsqrt_ps(xmm_wg1), xmm_g1)),
                         );
                         xmm_w2 = _mm_sub_ps(
                             xmm_w2,
-                            _mm_mul_ps(xmm_eta, _mm_mul_ps(_mm_rsqrt_ps(xmm_wg2), xmm_g2))
+                            _mm_mul_ps(xmm_eta, _mm_mul_ps(_mm_rsqrt_ps(xmm_wg2), xmm_g2)),
                         );
 
                         _mm_store_ps(&mut w[w1_offset], xmm_w1);

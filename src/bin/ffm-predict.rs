@@ -19,7 +19,11 @@ struct Args {
     output_file: PathBuf,
 }
 
-fn predict(test_path: &PathBuf, model_path: &PathBuf, output_path: &PathBuf) -> Result<(), Box<dyn Error>> {
+fn predict(
+    test_path: &PathBuf,
+    model_path: &PathBuf,
+    output_path: &PathBuf,
+) -> Result<(), Box<dyn Error>> {
     let model = Model::load(model_path)?;
     let (predictions, loss) = model.predict(test_path)?;
 

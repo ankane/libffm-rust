@@ -53,7 +53,8 @@ impl<W: Read + Write + Seek> ProblemOnDisk<W> {
     pub fn load_block(&mut self, block_index: i32) -> Result<usize, Error> {
         assert!(block_index < self.meta.num_blocks);
 
-        self.f.seek(SeekFrom::Start(self.b[block_index as usize] as u64))?;
+        self.f
+            .seek(SeekFrom::Start(self.b[block_index as usize] as u64))?;
 
         let l = self.f.read_i32::<NativeEndian>()? as usize;
 
@@ -135,11 +136,18 @@ impl ProblemLoader {
     pub fn read_to_disk(&mut self) -> Result<ProblemOnDisk<File>, Error> {
         let mut bin_path = self.path.file_name().unwrap().to_os_string();
         bin_path.push(".bin");
-        let mut f_bin = OpenOptions::new().read(true).write(true).create(true).truncate(true).open(&bin_path)?;
+        let mut f_bin = OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .truncate(true)
+            .open(&bin_path)?;
 
         let mut timer = Timer::new();
 
-        self.log("First check if the text file has already been converted to binary format ".to_string());
+        self.log(
+            "First check if the text file has already been converted to binary format ".to_string(),
+        );
         let same_file = check_same_txt_bin(&mut self.f_txt, &mut f_bin).unwrap_or(false);
         self.logln(format!("({:.1} seconds)", timer.toc()));
 
@@ -203,7 +211,16 @@ fn hashfile(f: &mut File, one_block: bool) -> Result<u64, Error> {
 }
 
 #[allow(clippy::too_many_arguments)]
-fn write_chunk<W: Write + Seek>(f_bin: &mut W, y: &mut Vec<f32>, r: &mut Vec<f32>, p: &mut Vec<i64>, x: &mut Vec<Node>, b: &mut Vec<i64>, meta: &mut DiskProblemMeta, p2: &mut i64) -> Result<(), Error> {
+fn write_chunk<W: Write + Seek>(
+    f_bin: &mut W,
+    y: &mut Vec<f32>,
+    r: &mut Vec<f32>,
+    p: &mut Vec<i64>,
+    x: &mut Vec<Node>,
+    b: &mut Vec<i64>,
+    meta: &mut DiskProblemMeta,
+    p2: &mut i64,
+) -> Result<(), Error> {
     b.push(f_bin.stream_position()? as i64);
     let l = y.len();
     meta.l += l as i32;
@@ -212,7 +229,11 @@ fn write_chunk<W: Write + Seek>(f_bin: &mut W, y: &mut Vec<f32>, r: &mut Vec<f32
     f_bin.write_all(&y.iter().flat_map(|v| v.to_ne_bytes()).collect::<Vec<u8>>())?;
     f_bin.write_all(&r.iter().flat_map(|v| v.to_ne_bytes()).collect::<Vec<u8>>())?;
     f_bin.write_all(&p.iter().flat_map(|v| v.to_ne_bytes()).collect::<Vec<u8>>())?;
-    f_bin.write_all(&x.iter().flat_map(|n| [n.f.to_ne_bytes(), n.j.to_ne_bytes(), n.v.to_ne_bytes()].concat()).collect::<Vec<u8>>())?;
+    f_bin.write_all(
+        &x.iter()
+            .flat_map(|n| [n.f.to_ne_bytes(), n.j.to_ne_bytes(), n.v.to_ne_bytes()].concat())
+            .collect::<Vec<u8>>(),
+    )?;
 
     y.clear();
     r.clear();
@@ -225,7 +246,12 @@ fn write_chunk<W: Write + Seek>(f_bin: &mut W, y: &mut Vec<f32>, r: &mut Vec<f32
 }
 
 pub(crate) fn parse_y(token: Option<&str>, i: usize) -> Result<f32, Error> {
-    if token.ok_or_else(|| Error::Line("expected line to start with int".to_string(), i))?.parse::<i32>().map_err(|_| Error::Line("expected line to start with int".to_string(), i))? > 0 {
+    if token
+        .ok_or_else(|| Error::Line("expected line to start with int".to_string(), i))?
+        .parse::<i32>()
+        .map_err(|_| Error::Line("expected line to start with int".to_string(), i))?
+        > 0
+    {
         Ok(1.0)
     } else {
         Ok(-1.0)
@@ -278,13 +304,19 @@ fn txt2bin<W: Write + Seek>(f_txt: &mut File, f_bin: &mut W) -> Result<(), Error
         p.push(p2);
 
         if x.len() > CHUNK_SIZE {
-            write_chunk(f_bin, &mut y, &mut r, &mut p, &mut x, &mut b, &mut meta, &mut p2)?;
+            write_chunk(
+                f_bin, &mut y, &mut r, &mut p, &mut x, &mut b, &mut meta, &mut p2,
+            )?;
         }
     }
-    write_chunk(f_bin, &mut y, &mut r, &mut p, &mut x, &mut b, &mut meta, &mut p2)?;
+    write_chunk(
+        f_bin, &mut y, &mut r, &mut p, &mut x, &mut b, &mut meta, &mut p2,
+    )?;
 
     // write a dummy empty chunk in order to know where the EOF is
-    write_chunk(f_bin, &mut y, &mut r, &mut p, &mut x, &mut b, &mut meta, &mut p2)?;
+    write_chunk(
+        f_bin, &mut y, &mut r, &mut p, &mut x, &mut b, &mut meta, &mut p2,
+    )?;
 
     assert_eq!(meta.num_blocks as usize, b.len());
 
@@ -297,7 +329,10 @@ fn txt2bin<W: Write + Seek>(f_txt: &mut File, f_bin: &mut W) -> Result<(), Error
     Ok(())
 }
 
-fn check_same_txt_bin<W: Read + Write + Seek>(f_txt: &mut File, f_bin: &mut W) -> Result<bool, Error> {
+fn check_same_txt_bin<W: Read + Write + Seek>(
+    f_txt: &mut File,
+    f_bin: &mut W,
+) -> Result<bool, Error> {
     let meta = DiskProblemMeta::new(f_bin)?;
     Ok(meta.hash1 == hashfile(f_txt, true)? && meta.hash2 == hashfile(f_txt, false)?)
 }

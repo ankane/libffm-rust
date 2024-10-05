@@ -17,7 +17,14 @@ impl fmt::Display for Error {
         match *self {
             Error::Io(ref err) => err.fmt(f),
             Error::Line(ref msg, line) => write!(f, "FFM error (line: {}): {}", line + 1, msg),
-            Error::Node(ref msg, line, node, token) => write!(f, "FFM error (line: {}, node: {}, token: {}): {}", line + 1, node + 1, token + 1, msg),
+            Error::Node(ref msg, line, node, token) => write!(
+                f,
+                "FFM error (line: {}, node: {}, token: {}): {}",
+                line + 1,
+                node + 1,
+                token + 1,
+                msg
+            ),
         }
     }
 }
