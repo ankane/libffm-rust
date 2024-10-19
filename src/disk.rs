@@ -126,9 +126,9 @@ impl ProblemLoader {
 
         let mut timer = Timer::new();
 
-        self.log("Convert text file to binary ".to_string());
+        self.log("Convert text file to binary ");
         txt2bin(&mut self.f_txt, &mut f_bin)?;
-        self.logln(format!("({:.1} seconds)", timer.toc()));
+        self.logln(&format!("({:.1} seconds)", timer.toc()));
 
         ProblemOnDisk::new(f_bin)
     }
@@ -146,30 +146,30 @@ impl ProblemLoader {
         let mut timer = Timer::new();
 
         self.log(
-            "First check if the text file has already been converted to binary format ".to_string(),
+            "First check if the text file has already been converted to binary format "
         );
         let same_file = check_same_txt_bin(&mut self.f_txt, &mut f_bin).unwrap_or(false);
-        self.logln(format!("({:.1} seconds)", timer.toc()));
+        self.logln(&format!("({:.1} seconds)", timer.toc()));
 
         if same_file {
-            self.logln("Binary file found. Skip converting text to binary".to_string());
+            self.logln("Binary file found. Skip converting text to binary");
         } else {
-            self.log("Binary file NOT found. Convert text file to binary file ".to_string());
+            self.log("Binary file NOT found. Convert text file to binary file ");
             txt2bin(&mut self.f_txt, &mut f_bin)?;
-            self.logln(format!("({:.1} seconds)", timer.toc()));
+            self.logln(&format!("({:.1} seconds)", timer.toc()));
         }
 
         ProblemOnDisk::new(f_bin)
     }
 
-    fn log(&self, msg: String) {
+    fn log(&self, msg: &str) {
         if !self.quiet {
             print!("{}", msg);
             io::stdout().flush().unwrap();
         }
     }
 
-    fn logln(&self, msg: String) {
+    fn logln(&self, msg: &str) {
         if !self.quiet {
             println!("{}", msg);
         }
