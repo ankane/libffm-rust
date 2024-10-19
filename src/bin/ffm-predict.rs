@@ -30,7 +30,7 @@ fn predict(
     let f_out = File::create(output_path)?;
     let mut writer = BufWriter::new(f_out);
     for prediction in predictions {
-        writer.write(format!("{:.6}\n", prediction).as_bytes())?;
+        writer.write_all(format!("{:.6}\n", prediction).as_bytes())?;
     }
     writer.flush()?;
 

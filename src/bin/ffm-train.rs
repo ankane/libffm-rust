@@ -66,7 +66,7 @@ fn train_on_disk(args: &Args) -> Result<(), Error> {
         .on_disk(!args.in_memory);
 
     let model = match &args.va_path {
-        Some(p) => params.train_eval(&args.tr_path, &p)?,
+        Some(p) => params.train_eval(&args.tr_path, p)?,
         None => params.train(&args.tr_path)?,
     };
 
