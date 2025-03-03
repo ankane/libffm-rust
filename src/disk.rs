@@ -145,9 +145,7 @@ impl ProblemLoader {
 
         let mut timer = Timer::new();
 
-        self.log(
-            "First check if the text file has already been converted to binary format "
-        );
+        self.log("First check if the text file has already been converted to binary format ");
         let same_file = check_same_txt_bin(&mut self.f_txt, &mut f_bin).unwrap_or(false);
         self.logln(&format!("({:.1} seconds)", timer.toc()));
 

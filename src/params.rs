@@ -129,7 +129,12 @@ impl Params {
             timer.tic();
             let tr_loss = model.one_epoch(&mut tr, true, self)?;
             timer.toc();
-            self.logln(&format!("{:>4}{:>13.5}{:>13.1}", iter, tr_loss, timer.get()));
+            self.logln(&format!(
+                "{:>4}{:>13.5}{:>13.1}",
+                iter,
+                tr_loss,
+                timer.get()
+            ));
         }
 
         Ok(model)
@@ -160,7 +165,10 @@ impl Params {
             if self.auto_stop {
                 if va_loss > best_va_loss {
                     model.w = prev_w;
-                    self.logln(&format!("Auto-stop. Use model at {}th iteration.", iter - 1));
+                    self.logln(&format!(
+                        "Auto-stop. Use model at {}th iteration.",
+                        iter - 1
+                    ));
                     break;
                 } else {
                     prev_w.clone_from(&model.w);
