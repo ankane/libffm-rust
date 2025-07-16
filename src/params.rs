@@ -190,7 +190,7 @@ impl Params {
 
     fn logln(&self, msg: &str) {
         if !self.quiet {
-            println!("{}", msg);
+            println!("{msg}");
         }
     }
 }

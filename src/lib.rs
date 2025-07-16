@@ -24,8 +24,8 @@ mod tests {
 
     #[test]
     fn test_string() {
-        let model = Model::train("data/train.ffm".to_string()).unwrap();
-        assert!(model.predict("data/test.ffm".to_string()).is_ok());
+        let model = Model::train("data/train.ffm").unwrap();
+        assert!(model.predict("data/test.ffm").is_ok());
     }
 
     #[test]

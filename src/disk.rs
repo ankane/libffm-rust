@@ -162,14 +162,14 @@ impl ProblemLoader {
 
     fn log(&self, msg: &str) {
         if !self.quiet {
-            print!("{}", msg);
+            print!("{msg}");
             io::stdout().flush().unwrap();
         }
     }
 
     fn logln(&self, msg: &str) {
         if !self.quiet {
-            println!("{}", msg);
+            println!("{msg}");
         }
     }
 }
