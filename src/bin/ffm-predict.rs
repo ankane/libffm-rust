@@ -30,11 +30,11 @@ fn predict(
     let f_out = File::create(output_path)?;
     let mut writer = BufWriter::new(f_out);
     for prediction in predictions {
-        writer.write_all(format!("{:.6}\n", prediction).as_bytes())?;
+        writer.write_all(format!("{prediction:.6}\n").as_bytes())?;
     }
     writer.flush()?;
 
-    println!("logloss = {:.5}", loss);
+    println!("logloss = {loss:.5}");
 
     Ok(())
 }
@@ -43,7 +43,7 @@ fn main() {
     let args = Args::parse();
 
     if let Err(err) = predict(&args.test_file, &args.model_file, &args.output_file) {
-        println!("{}", err);
+        println!("{err}");
         process::exit(1);
     }
 }

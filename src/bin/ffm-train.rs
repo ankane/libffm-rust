@@ -87,7 +87,7 @@ fn main() {
     }
 
     if let Err(err) = train_on_disk(&args) {
-        println!("{}", err);
+        println!("{err}");
         process::exit(1);
     }
 }
