@@ -33,7 +33,7 @@ Prep your data in LIBFFM format
 Train a model
 
 ```rust
-let model = libffm::Model::train("train.ffm").unwrap();
+let model = libffm::Model::train("train.ffm")?;
 ```
 
 Use a validation set and early stopping to prevent overfitting
@@ -41,26 +41,25 @@ Use a validation set and early stopping to prevent overfitting
 ```rust
 let model = libffm::Model::params()
     .auto_stop(true)
-    .train_eval("train.ffm", "valid.ffm")
-    .unwrap();
+    .train_eval("train.ffm", "valid.ffm")?;
 ```
 
 Make predictions
 
 ```rust
-let (predictions, loss) = model.predict("test.ffm").unwrap();
+let (predictions, loss) = model.predict("test.ffm")?;
 ```
 
 Save the model to a file
 
 ```rust
-model.save("model.bin").unwrap();
+model.save("model.bin")?;
 ```
 
 Load a model from a file
 
 ```rust
-let model = libffm::Model::load("model.bin").unwrap();
+let model = libffm::Model::load("model.bin")?;
 ```
 
 ### Training Options
@@ -75,7 +74,7 @@ let model = libffm::Model::params()
     .normalization(true)     // use instance-wise normalization
     .auto_stop(false)        // stop at the iteration that achieves the best validation loss
     .on_disk(false)          // on-disk training
-    .train("train.ffm");     // train or train_eval
+    .train("train.ffm")?;    // train or train_eval
 ```
 
 ## Command Line Tool
